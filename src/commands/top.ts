@@ -5,6 +5,7 @@ import { requireConfig } from "@/config";
 import { UsageError } from "@/libs/errors";
 import type { TimePeriod } from "@/api/types/top";
 import { createUi } from "@/ui";
+import { isMachineOutput, writeOutput } from "@/output";
 import {
   printLines,
   renderTrackLines,
@@ -93,6 +94,19 @@ export const topCommand: Command = {
         () => LastFMClient.user.getTopArtists(username, periodRaw, limit),
       );
 
+      if (isMachineOutput(ctx.options.output)) {
+        writeOutput(
+          ctx.options.output,
+          artists.map((artist, index) => ({
+            rank: index + 1,
+            name: artist.name,
+            playCount: artist.playcount,
+            url: artist.url,
+          })),
+        );
+        return;
+      }
+
       ui.page(
         `Top ${kindLabel}`,
         `@${username}  ·  ${periodLabel}  ·  ${artists.length} results`,
@@ -135,6 +149,20 @@ export const topCommand: Command = {
         `Fetching top tracks for ${username}`,
         () => LastFMClient.user.getTopTracks(username, periodRaw, limit),
       );
+
+      if (isMachineOutput(ctx.options.output)) {
+        writeOutput(
+          ctx.options.output,
+          tracks.map((track, index) => ({
+            rank: index + 1,
+            name: track.name,
+            artist: track.artist["#text"],
+            playCount: track.playcount,
+            url: track.url,
+          })),
+        );
+        return;
+      }
 
       ui.page(
         `Top ${kindLabel}`,
@@ -180,6 +208,20 @@ export const topCommand: Command = {
         `Fetching top albums for ${username}`,
         () => LastFMClient.user.getTopAlbums(username, periodRaw, limit),
       );
+
+      if (isMachineOutput(ctx.options.output)) {
+        writeOutput(
+          ctx.options.output,
+          albums.map((album, index) => ({
+            rank: index + 1,
+            name: album.name,
+            artist: album.artist.name,
+            playCount: album.playcount,
+            url: album.url,
+          })),
+        );
+        return;
+      }
 
       ui.page(
         `Top ${kindLabel}`,

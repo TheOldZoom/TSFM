@@ -4,6 +4,7 @@ import LastFMClient from "@/api";
 import { enrichTrackUserPlays } from "@/api/enrich";
 import { requireConfig } from "@/config";
 import { createUi, icons } from "@/ui";
+import { isMachineOutput, writeOutput } from "@/output";
 import {
   printLines,
   renderTrackLines,
@@ -36,12 +37,29 @@ export const nowCommand: Command = {
     );
 
     if (!track) {
+      if (isMachineOutput(ctx.options.output)) {
+        writeOutput(ctx.options.output, { nowPlaying: null });
+        return;
+      }
       ui.hint("No track is currently playing.");
       return;
     }
 
     const plays = await enrichTrackUserPlays(username, [track]);
     const userPlayCount = plays.get(`${track.artist["#text"]}\0${track.name}`);
+
+    if (isMachineOutput(ctx.options.output)) {
+      writeOutput(ctx.options.output, {
+        nowPlaying: {
+          name: track.name,
+          artist: track.artist["#text"],
+          album: track.album?.["#text"] ?? "",
+          userPlayCount: userPlayCount ?? null,
+          url: track.url,
+        },
+      });
+      return;
+    }
 
     ui.page("Now playing", `@${username}`);
 

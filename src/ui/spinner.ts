@@ -6,7 +6,7 @@ export async function withSpinner<T>(
   fn: () => Promise<T>,
   options: UiOptions,
 ): Promise<T> {
-  if (options.quiet) {
+  if (options.quiet || options.output !== "pretty") {
     return fn();
   }
 

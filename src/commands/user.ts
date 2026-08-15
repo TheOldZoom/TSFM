@@ -3,6 +3,7 @@ import type { Command } from "./types";
 import LastFMClient from "@/api";
 import { requireConfig } from "@/config";
 import { createUi, icons } from "@/ui";
+import { isMachineOutput, writeOutput } from "@/output";
 import {
   printLines,
   renderTrackLines,
@@ -29,6 +30,17 @@ export const userCommand: Command = {
     const info = await ui.spinner(`Fetching profile for ${username}`, () =>
       LastFMClient.user.getInfo(username),
     );
+
+    if (isMachineOutput(ctx.options.output)) {
+      writeOutput(ctx.options.output, {
+        username: info.name,
+        realName: info.realname || null,
+        country: info.country || null,
+        scrobbles: info.playcount,
+        profile: info.url,
+      });
+      return;
+    }
 
     const displayName = info.realname ? `${info.realname} (${info.name})` : info.name;
     const images = shouldRenderImages(ctx.options);

@@ -12,6 +12,7 @@ export interface LastFMImage {
 
 export interface LastFMArtist {
   "#text": string;
+  name: string;
   mbid?: string;
 }
 

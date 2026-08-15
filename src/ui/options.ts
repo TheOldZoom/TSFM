@@ -4,6 +4,7 @@ export interface UiOptions {
   verbose: boolean;
   images: boolean;
   imageMode: "auto" | "ansi";
+  output: "pretty" | "json" | "csv";
 }
 
 export const defaultUiOptions: UiOptions = {
@@ -12,6 +13,7 @@ export const defaultUiOptions: UiOptions = {
   verbose: false,
   images: true,
   imageMode: "auto",
+  output: "pretty",
 };
 
 const GLOBAL_FLAGS = new Set([
@@ -22,6 +24,8 @@ const GLOBAL_FLAGS = new Set([
   "-v",
   "--images",
   "--no-images",
+  "--json",
+  "--csv",
 ]);
 
 export function isGlobalFlag(arg: string): boolean {
@@ -32,10 +36,12 @@ export function parseGlobalFlags(argv: string[]): {
   options: UiOptions;
   args: string[];
   imagesOverride?: boolean;
+  outputOverride?: "json" | "csv";
 } {
   const options: UiOptions = { ...defaultUiOptions };
   const args: string[] = [];
   let imagesOverride: boolean | undefined;
+  let outputOverride: "json" | "csv" | undefined;
 
   for (const arg of argv) {
     switch (arg) {
@@ -55,6 +61,12 @@ export function parseGlobalFlags(argv: string[]): {
         break;
       case "--no-images":
         imagesOverride = false;
+        break;
+      case "--json":
+        outputOverride = "json";
+        break;
+      case "--csv":
+        outputOverride = "csv";
         break;
       default:
         args.push(arg);
@@ -78,7 +90,7 @@ export function parseGlobalFlags(argv: string[]): {
     options.color = true;
   }
 
-  return { options, args, imagesOverride };
+  return { options, args, imagesOverride, outputOverride };
 }
 
 export function parseCommandArgv(argv: string[]): {
@@ -86,9 +98,10 @@ export function parseCommandArgv(argv: string[]): {
   commandArgs: string[];
   options: UiOptions;
   imagesOverride?: boolean;
+  outputOverride?: "json" | "csv";
 } {
-  const { options, args, imagesOverride } = parseGlobalFlags(argv);
+  const { options, args, imagesOverride, outputOverride } = parseGlobalFlags(argv);
   const [commandName, ...commandArgs] = args;
 
-  return { commandName, commandArgs, options, imagesOverride };
+  return { commandName, commandArgs, options, imagesOverride, outputOverride };
 }

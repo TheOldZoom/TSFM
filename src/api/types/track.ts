@@ -24,6 +24,7 @@ export interface LastFMTrack {
 
 export interface LastFMTrackInfo {
   name: string;
+  duration?: string;
 
   artist: {
     name: string;

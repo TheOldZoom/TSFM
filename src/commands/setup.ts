@@ -1,6 +1,6 @@
 import * as p from "@clack/prompts";
 import type { Command } from "./types";
-import { loadConfig, writeConfigFile } from "@/config";
+import { getConfigPath, loadConfig, writeConfigFile } from "@/config";
 
 export const setupCommand: Command = {
   name: "setup",
@@ -141,6 +141,6 @@ export const setupCommand: Command = {
     writeConfigFile(config);
     s.stop("Preferences saved");
 
-    p.outro(`Saved to ${process.env.XDG_CONFIG_HOME ?? "~/.config"}`);
+    p.outro(`Saved to ${getConfigPath()}`);
   },
 };

@@ -46,16 +46,17 @@ export function createUi(options: UiOptions): Ui {
     options,
     theme,
     page(title, meta) {
-      if (options.quiet) return;
+      if (options.quiet || options.output !== "pretty") return;
       for (const line of formatPage(theme, title, meta)) {
         console.log(line);
       }
     },
     heading(text) {
-      if (options.quiet) return;
+      if (options.quiet || options.output !== "pretty") return;
       console.log(formatHeading(theme, text));
     },
     section(title, body) {
+      if (options.output !== "pretty") return;
       if (options.quiet) {
         for (const line of body) console.log(line);
         return;
@@ -65,14 +66,17 @@ export function createUi(options: UiOptions): Ui {
       }
     },
     keyValue(label, value) {
+      if (options.output !== "pretty") return;
       console.log(formatKeyValue(theme, label, value));
     },
     table(columns, rows) {
+      if (options.output !== "pretty") return;
       for (const line of renderTable(columns, rows, { theme, quiet: options.quiet })) {
         console.log(line);
       }
     },
     nowPlaying(artist, track) {
+      if (options.output !== "pretty") return;
       if (options.quiet) {
         console.log(`${track} — ${artist}`);
         return;
@@ -82,17 +86,18 @@ export function createUi(options: UiOptions): Ui {
       }
     },
     error(message) {
+      if (options.output !== "pretty") return;
       console.error(formatError(theme, message));
     },
     hint(message) {
-      if (options.quiet) return;
+      if (options.quiet || options.output !== "pretty") return;
       console.error(formatHint(theme, message));
     },
     spinner(label, fn) {
       return withSpinner(label, fn, options);
     },
     blank() {
-      if (options.quiet) return;
+      if (options.quiet || options.output !== "pretty") return;
       console.log();
     },
   };

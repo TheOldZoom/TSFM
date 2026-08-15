@@ -24,11 +24,21 @@ export class UserMethods {
     return response.user;
   }
 
-  async getRecentTracks(user: string, limit = 10) {
+  async getRecentTracks(
+    user: string,
+    limit = 10,
+    options: { from?: number; to?: number; page?: number } = {},
+  ) {
     const response = await request<{ recenttracks: LastFMRecentTracks }>(
       this.client,
       "user.getRecentTracks",
-      { user, limit },
+      {
+        user,
+        limit,
+        ...(options.from ? { from: options.from } : {}),
+        ...(options.to ? { to: options.to } : {}),
+        ...(options.page ? { page: options.page } : {}),
+      },
     );
     await enrichImages("user.getRecentTracks", response.recenttracks.track);
     return response.recenttracks;

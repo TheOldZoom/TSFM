@@ -5,6 +5,7 @@ import { setupCommand } from "./setup";
 import { configCommand } from "./config";
 import { userCommand } from "./user";
 import { topCommand } from "./top";
+import { statsCommand } from "./stats";
 
 export const commands = new Map<string, Command>([
   [recentCommand.name, recentCommand],
@@ -13,4 +14,5 @@ export const commands = new Map<string, Command>([
   [configCommand.name, configCommand],
   [userCommand.name, userCommand],
   [topCommand.name, topCommand],
+  [statsCommand.name, statsCommand],
 ]);

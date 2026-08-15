@@ -1,6 +1,7 @@
 import type { Command } from "./types";
 import { loadConfig, getConfigPath } from "@/config";
 import { createUi } from "@/ui";
+import { isMachineOutput, writeOutput } from "@/output";
 
 export const configCommand: Command = {
   name: "config",
@@ -15,6 +16,15 @@ export const configCommand: Command = {
     }
 
     const config = loadConfig();
+    if (isMachineOutput(ctx.options.output)) {
+      writeOutput(ctx.options.output, {
+        configured: Boolean(config.lastfm.apiKey && config.lastfm.username),
+        lastfm: { username: config.lastfm.username ?? null },
+        appearance: config.appearance,
+        path: getConfigPath(),
+      });
+      return;
+    }
     ui.page("Configuration", getConfigPath());
     ui.section("Last.fm", [
       `  ${ui.theme.label("Username    ")}${config.lastfm.username ?? "not set"}`,

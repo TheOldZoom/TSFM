@@ -92,13 +92,13 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 
 ## Phase 6 — Output
 
-- [ ] Add JSON output
-- [ ] Add CSV output
-- [ ] Add `--json`
-- [ ] Add `--csv`
-- [ ] Add machine-readable errors
-- [ ] Separate data from presentation
-- [ ] Add output formatting system
+- [x] Add JSON output
+- [x] Add CSV output
+- [x] Add `--json`
+- [x] Add `--csv`
+- [x] Add machine-readable errors
+- [x] Separate data from presentation
+- [x] Add output formatting system
 
 **Goal:** TSFM can be used both interactively and in scripts.
 
@@ -106,19 +106,19 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 
 ## Phase 7 — Statistics
 
-- [ ] Add `tsfm stats`
-- [ ] Add weekly statistics
-- [ ] Add monthly statistics
-- [ ] Add yearly statistics
-- [ ] Add overall statistics
-- [ ] Add play counts
-- [ ] Add listening time
-- [ ] Add top artists
-- [ ] Add top tracks
-- [ ] Add top albums
-- [ ] Add listening activity by day
-- [ ] Add listening activity by hour
-- [ ] Add listening trends
+- [x] Add `tsfm stats`
+- [x] Add weekly statistics
+- [x] Add monthly statistics
+- [x] Add yearly statistics
+- [x] Add overall statistics
+- [x] Add play counts
+- [x] Add listening time
+- [x] Add top artists
+- [x] Add top tracks
+- [x] Add top albums
+- [x] Add listening activity by day
+- [x] Add listening activity by hour
+- [x] Add listening trends
 
 **Goal:** TSFM can provide detailed listening statistics.
 

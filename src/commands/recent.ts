@@ -1,13 +1,11 @@
 import { parseArgs } from "node:util";
 import type { Command } from "./types";
 import LastFMClient from "@/api";
-import {
-  applyEnrichedPlays,
-  enrichTrackUserPlays,
-} from "@/api/enrich";
+import { applyEnrichedPlays, enrichTrackUserPlays } from "@/api/enrich";
 import { requireConfig } from "@/config";
 import { UsageError } from "@/libs/errors";
 import { createUi } from "@/ui";
+import { isMachineOutput, writeOutput } from "@/output";
 import {
   printLines,
   renderTrackLines,
@@ -44,11 +42,62 @@ export const recentCommand: Command = {
     const { tracks, plays } = await ui.spinner(
       `Fetching recent tracks for ${username}`,
       async () => {
-        const recent = await LastFMClient.user.getRecentTracks(username, limit);
-        const enrichedPlays = await enrichTrackUserPlays(username, recent.track);
-        return { tracks: recent.track, plays: enrichedPlays };
+        const recent = await LastFMClient.user.getRecentTracks(
+          username,
+          limit + 1,
+        );
+
+        const enrichedPlays = await enrichTrackUserPlays(
+          username,
+          recent.track,
+        );
+
+        return {
+          tracks: recent.track,
+          plays: enrichedPlays,
+        };
       },
     );
+
+    const nowPlayingTrack = tracks.find(
+      (track) => track["@attr"]?.nowplaying === "true",
+    );
+
+    const recentTracks = tracks
+      .filter((track) => track["@attr"]?.nowplaying !== "true")
+      .slice(0, limit);
+
+    const data = [
+      ...(nowPlayingTrack
+        ? [
+            {
+              rank: 0,
+              name: nowPlayingTrack.name,
+              artist: nowPlayingTrack.artist["#text"],
+              album: nowPlayingTrack.album?.["#text"] ?? "",
+              playedAt: null,
+              nowPlaying: true,
+              userPlayCount: applyEnrichedPlays(nowPlayingTrack, plays) ?? null,
+              url: nowPlayingTrack.url,
+            },
+          ]
+        : []),
+      ...recentTracks.map((track, index) => ({
+        rank: index + 1,
+        name: track.name,
+        artist: track.artist["#text"],
+        album: track.album?.["#text"] ?? "",
+        playedAt: track.date?.["#text"] ?? null,
+        nowPlaying: false,
+        userPlayCount: applyEnrichedPlays(track, plays) ?? null,
+        url: track.url,
+      })),
+    ];
+
+    if (isMachineOutput(ctx.options.output)) {
+      writeOutput(ctx.options.output, data);
+      return;
+    }
 
     if (tracks.length === 0) {
       ui.hint(`No recent tracks found for ${username}.`);
@@ -59,10 +108,40 @@ export const recentCommand: Command = {
     const nativeImages = shouldUseNativeImages(ctx.options);
     const imageOptions = ctx.config.appearance;
 
-    ui.page("Recent tracks", `@${username}  ·  ${tracks.length} latest plays`);
+    ui.page(
+      "Recent tracks",
+      `@${username}  ·  ${recentTracks.length} latest plays`,
+    );
 
-    for (const [index, track] of tracks.entries()) {
+    if (nowPlayingTrack) {
+      ui.heading("Currently Playing");
+      ui.blank();
+
+      const userPlayCount = applyEnrichedPlays(nowPlayingTrack, plays);
+
+      const lines = await renderTrackLines(
+        {
+          name: nowPlayingTrack.name,
+          artist: nowPlayingTrack.artist["#text"],
+          album: nowPlayingTrack.album?.["#text"],
+          image: nowPlayingTrack.image,
+          userPlayCount,
+        },
+        `▶  ${nowPlayingTrack.name}`,
+        ui.theme,
+        { ...imageOptions, images, nativeImages },
+      );
+
+      printLines(lines);
+      ui.blank();
+
+      ui.heading("Recently Played");
+      ui.blank();
+    }
+
+    for (const [index, track] of recentTracks.entries()) {
       const userPlayCount = applyEnrichedPlays(track, plays);
+
       const lines = await renderTrackLines(
         {
           name: track.name,
