@@ -117,8 +117,7 @@ export const setupCommand: Command = {
           }),
         cacheEnabled: () =>
           p.confirm({
-            message:
-              "Cache Last.fm responses locally to speed up repeat lookups",
+            message: "Cache Last.fm images locally to speed up repeat lookups",
             initialValue: current.cache.enabled,
           }),
       },

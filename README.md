@@ -1,6 +1,6 @@
 # TSFM
 
-> Your Last.fm. Your terminal.
+> Your Last.fm, in the terminal
 
 TSFM is an open-source Last.fm CLI built with TypeScript and Bun.
 
