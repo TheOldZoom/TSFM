@@ -107,7 +107,7 @@ Environment variables can also be used for scripts and automated environments.
 
 TSFM is still being built.
 
-Check out the [Roadmap](./roadmap.md) for more information about what's planned and what's currently being worked on.
+Check out the [Roadmap](./ROADMAP.md) for more information about what's planned and what's currently being worked on.
 
 ## Contributing
 

@@ -4,16 +4,14 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 
 ## Phase 1 — Foundation
 
-- [ ] Set up Bun + TypeScript project
-- [ ] Set up project structure
-- [ ] Set up CLI entrypoint
-- [ ] Add command system
-- [ ] Add configuration system
-- [ ] Add environment variable handling
-- [ ] Add logging
-- [ ] Add error handling
-- [ ] Add testing
-- [ ] Add GitHub Actions
+- [x] Set up Bun + TypeScript project
+- [x] Set up project structure
+- [x] Set up CLI entrypoint
+- [x] Add command system
+- [x] Add configuration system
+- [x] Add environment variable handling
+- [x] Add logging
+- [x] Add error handling
 
 **Goal:** TSFM has a clean foundation and can run as a basic CLI.
 
