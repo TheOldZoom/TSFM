@@ -1,28 +1,54 @@
 {
   "name": "@theoldzoom/tsfm",
   "version": "0.1.4",
-  "description": "A Last.fm CLI built with TypeScript",
+  "description": "A Last.fm CLI built with TypeScript and Bun",
+  "keywords": [
+    "lastfm",
+    "last.fm",
+    "cli",
+    "music",
+    "scrobble",
+    "scrobbling",
+    "statistics",
+    "terminal",
+    "typescript",
+    "bun"
+  ],
+  "homepage": "https://github.com/TheOldZoom/tsfm",
+  "bugs": {
+    "url": "https://github.com/TheOldZoom/tsfm/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheOldZoom/tsfm.git"
+  },
+  "author": {
+    "name": "Zoom",
+    "email": "theoldzoom@proton.me",
+    "url": "https://zoomhub.xyz"
+  },
+  "license": "MIT",
   "type": "module",
-  "module": "src/index.ts",
   "bin": {
     "tsfm": "dist/cli.js"
   },
-  "publishConfig": {
-    "access": "public"
-  },
-  "scripts": {
-    "dev": "bun run src/cli.ts",
-    "build": "rm -rf dist && bun build ./src/cli.ts --outdir ./dist --target node",
-    "start": "node dist/cli.js"
-  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "engines": {
     "node": ">=20",
     "bun": ">=1.2.0"
   },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "@types/node": "^26.2.0",
-    "typescript": "^7.0.2"
+  "scripts": {
+    "dev": "bun run src/cli.ts",
+    "build": "rm -rf dist && bun build ./src/cli.ts --outdir ./dist --target node",
+    "start": "node dist/cli.js",
+    "prepublishOnly": "bun run build"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "@clack/prompts": "^1.7.0",
@@ -30,11 +56,9 @@
     "yaml": "^2.9.0",
     "zod": "^4.4.3"
   },
-  "license": "MIT",
-  "files": [
-    "dist",
-    "README.md",
-    "LICENSE",
-    "package.json"
-  ]
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^26.2.0",
+    "typescript": "^7.0.2"
+  }
 }

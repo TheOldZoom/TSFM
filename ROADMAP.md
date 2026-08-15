@@ -199,43 +199,9 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 
 ## Phase 13 — v1.0
 
-- [ ] Stabilize CLI interface
-- [ ] Stabilize configuration format
 - [ ] Complete documentation
-- [ ] Improve test coverage
-- [ ] Add integration tests
 - [ ] Fix cross-platform issues
-- [ ] Improve API reliability
-- [ ] Improve performance
-- [ ] Finalize command structure
-- [ ] Finalize release process
 
 **Goal:** TSFM is a stable, production-ready Last.fm CLI.
 
 ---
-
-## MVP
-
-The first real milestone is:
-
-```text
-Last.fm
-    ↓
-API Client
-    ↓
-Configuration
-    ↓
-TSFM CLI
-    ↓
-┌─────────────────┐
-│     recent      │
-│      user       │
-│       top       │
-└─────────────────┘
-    ↓
-Terminal UI
-    ↓
-JSON / CSV
-```
-
-**MVP = Phases 1–6.**
