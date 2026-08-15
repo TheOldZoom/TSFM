@@ -1,5 +1,6 @@
 import type { LastFM } from "../client";
 import { request } from "../request";
+import { enrichImages } from "../enrich";
 
 import type { LastFMTrackInfo } from "../types/track";
 
@@ -19,6 +20,7 @@ export class TrackMethods {
         : {}),
     });
 
+    await enrichImages("track.getInfo", [response.track]);
     return response.track;
   }
 }

@@ -9,7 +9,7 @@ export const setupCommand: Command = {
     const current = loadConfig();
 
     console.log();
-    p.intro("tsfm setup");
+    p.intro("◆ TSFM  /  SETUP");
 
     const group = await p.group(
       {
@@ -39,6 +39,72 @@ export const setupCommand: Command = {
               }
             },
           }),
+        images: () =>
+          p.confirm({
+            message: "Render album artwork in the terminal",
+            initialValue: current.appearance.images,
+          }),
+        imageMode: () =>
+          p.select({
+            message: "Artwork style",
+            initialValue: current.appearance.imageMode,
+            options: [
+              {
+                value: "auto" as const,
+                label: "Native images when supported",
+                hint: "otherwise use ANSI artwork",
+              },
+              {
+                value: "ansi" as const,
+                label: "ANSI artwork only",
+              },
+            ],
+          }),
+        imageSize: () =>
+          p.select({
+            message: "Artwork size",
+            initialValue: current.appearance.imageSize,
+            options: [
+              { value: "compact" as const, label: "Compact" },
+              { value: "normal" as const, label: "Normal" },
+              { value: "large" as const, label: "Large" },
+            ],
+          }),
+        imageWidth: () =>
+          p.text({
+            message: "Artwork target width (terminal columns)",
+            placeholder: "automatic",
+            initialValue: current.appearance.imageWidth?.toString() ?? "",
+            validate(value) {
+              if (!value) return;
+              const width = Number(value);
+              if (!Number.isInteger(width) || width < 4 || width > 80) {
+                return "Enter a whole number from 4 to 80, or leave blank for automatic.";
+              }
+            },
+          }),
+        imageMaxWidth: () =>
+          p.text({
+            message: "Maximum artwork width (terminal columns)",
+            initialValue: String(current.appearance.imageMaxWidth),
+            validate(value) {
+              const width = Number(value);
+              if (!Number.isInteger(width) || width < 8 || width > 80) {
+                return "Enter a whole number from 8 to 80.";
+              }
+            },
+          }),
+        imageSpacing: () =>
+          p.text({
+            message: "Space between ANSI artwork and text",
+            initialValue: String(current.appearance.imageSpacing),
+            validate(value) {
+              const spacing = Number(value);
+              if (!Number.isInteger(spacing) || spacing < 0 || spacing > 8) {
+                return "Enter a whole number from 0 to 8.";
+              }
+            },
+          }),
       },
       {
         onCancel: () => {
@@ -53,10 +119,18 @@ export const setupCommand: Command = {
         apiKey: group.apiKey.trim() || current.lastfm.apiKey,
         username: group.username.trim() || current.lastfm.username,
       },
+      appearance: {
+        images: group.images,
+        imageMode: group.imageMode,
+        imageSize: group.imageSize,
+        imageWidth: group.imageWidth ? Number(group.imageWidth) : undefined,
+        imageMaxWidth: Number(group.imageMaxWidth),
+        imageSpacing: Number(group.imageSpacing),
+      },
     };
 
     const s = p.spinner();
-    s.start("Saving configuration");
+    s.start("Saving your preferences");
 
     if (!config.lastfm.apiKey || !config.lastfm.username) {
       s.stop("Configuration incomplete");
@@ -65,7 +139,7 @@ export const setupCommand: Command = {
       return;
     }
     writeConfigFile(config);
-    s.stop("Configuration saved");
+    s.stop("Preferences saved");
 
     p.outro(`Saved to ${process.env.XDG_CONFIG_HOME ?? "~/.config"}`);
   },

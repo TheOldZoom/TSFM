@@ -1,5 +1,6 @@
 import type { LastFM } from "../client";
 import { request } from "../request";
+import { enrichImages } from "../enrich";
 
 import type { LastFMUser } from "../types/user";
 import type { LastFMRecentTracks } from "../types/track";
@@ -19,6 +20,7 @@ export class UserMethods {
       "user.getInfo",
       { user },
     );
+    await enrichImages("user.getInfo", [response.user]);
     return response.user;
   }
 
@@ -28,6 +30,7 @@ export class UserMethods {
       "user.getRecentTracks",
       { user, limit },
     );
+    await enrichImages("user.getRecentTracks", response.recenttracks.track);
     return response.recenttracks;
   }
 
@@ -41,6 +44,7 @@ export class UserMethods {
       "user.getTopArtists",
       { user, period, limit },
     );
+    await enrichImages("user.getTopArtists", response.topartists.artist);
     return response.topartists.artist;
   }
 
@@ -50,6 +54,7 @@ export class UserMethods {
       "user.getTopTracks",
       { user, period, limit },
     );
+    await enrichImages("user.getTopTracks", response.toptracks.track);
     return response.toptracks.track;
   }
 
@@ -59,6 +64,7 @@ export class UserMethods {
       "user.getTopAlbums",
       { user, period, limit },
     );
+    await enrichImages("user.getTopAlbums", response.topalbums.album);
     return response.topalbums.album;
   }
 }

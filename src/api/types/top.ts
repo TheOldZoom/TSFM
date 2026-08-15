@@ -1,4 +1,3 @@
-// src/api/types/top.ts
 import type { LastFMArtist, LastFMImage } from "./common";
 
 export type TimePeriod =

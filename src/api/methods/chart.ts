@@ -1,7 +1,8 @@
 import type { LastFM } from "../client";
 import { request } from "../request";
+import { enrichImages } from "../enrich";
 
-import type { LastFMArtist } from "../types/common";
+import type { LastFMTopArtist } from "../types/top";
 import type { LastFMTrack } from "../types/track";
 
 export class ChartMethods {
@@ -9,9 +10,10 @@ export class ChartMethods {
 
   async getTopArtists(limit = 50) {
     const response = await request<{
-      artists: { artist: LastFMArtist[] };
+      artists: { artist: LastFMTopArtist[] };
     }>(this.client, "chart.getTopArtists", { limit });
 
+    await enrichImages("chart.getTopArtists", response.artists.artist);
     return response.artists.artist;
   }
 
@@ -20,6 +22,7 @@ export class ChartMethods {
       tracks: { track: LastFMTrack[] };
     }>(this.client, "chart.getTopTracks", { limit });
 
+    await enrichImages("chart.getTopTracks", response.tracks.track);
     return response.tracks.track;
   }
 }

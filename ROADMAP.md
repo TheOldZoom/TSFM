@@ -73,18 +73,18 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 
 ## Phase 5 — Terminal UI
 
-- [ ] Add formatted terminal output
-- [ ] Add tables
-- [ ] Add colors
-- [ ] Add icons
-- [ ] Add spinners
-- [ ] Add loading states
-- [ ] Add relative timestamps
-- [ ] Add clean error messages
-- [ ] Add consistent command formatting
-- [ ] Add `--no-color`
-- [ ] Add `--quiet`
-- [ ] Add `--verbose`
+- [x] Add formatted terminal output
+- [x] Add tables
+- [x] Add colors
+- [x] Add icons
+- [x] Add spinners
+- [x] Add loading states
+- [x] Add relative timestamps
+- [x] Add clean error messages
+- [x] Add consistent command formatting
+- [x] Add `--no-color`
+- [x] Add `--quiet`
+- [x] Add `--verbose`
 
 **Goal:** TSFM feels like a polished modern terminal application.
 
@@ -99,7 +99,6 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 - [ ] Add machine-readable errors
 - [ ] Separate data from presentation
 - [ ] Add output formatting system
-- [ ] Add output tests
 
 **Goal:** TSFM can be used both interactively and in scripts.
 

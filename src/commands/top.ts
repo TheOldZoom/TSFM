@@ -4,6 +4,13 @@ import LastFMClient from "@/api";
 import { requireConfig } from "@/config";
 import { UsageError } from "@/libs/errors";
 import type { TimePeriod } from "@/api/types/top";
+import { createUi } from "@/ui";
+import {
+  printLines,
+  renderTrackLines,
+  shouldRenderImages,
+  shouldUseNativeImages,
+} from "@/ui/render-track";
 
 const VALID_PERIODS = [
   "overall",
@@ -14,6 +21,15 @@ const VALID_PERIODS = [
   "12month",
 ] as const;
 
+const PERIOD_LABELS: Record<TimePeriod, string> = {
+  overall: "all time",
+  "7day": "7 days",
+  "1month": "1 month",
+  "3month": "3 months",
+  "6month": "6 months",
+  "12month": "12 months",
+};
+
 function isValidPeriod(value: string): value is TimePeriod {
   return (VALID_PERIODS as readonly string[]).includes(value);
 }
@@ -23,6 +39,8 @@ export const topCommand: Command = {
   description: "Show top artists, tracks, or albums",
   async run(ctx) {
     requireConfig(ctx.config);
+
+    const ui = createUi(ctx.options);
 
     const [subcommand, ...rest] = ctx.args;
 
@@ -58,37 +76,152 @@ export const topCommand: Command = {
       );
     }
 
+    const periodLabel = PERIOD_LABELS[periodRaw];
+    const images = shouldRenderImages(ctx.options);
+    const nativeImages = shouldUseNativeImages(ctx.options);
+    const imageOptions = ctx.config.appearance;
+    const kindLabel =
+      subcommand === "artists"
+        ? "Artists"
+        : subcommand === "tracks"
+          ? "Tracks"
+          : "Albums";
+
     if (subcommand === "artists") {
-      const artists = await LastFMClient.user.getTopArtists(
-        username,
-        periodRaw,
-        limit,
+      const artists = await ui.spinner(
+        `Fetching top artists for ${username}`,
+        () => LastFMClient.user.getTopArtists(username, periodRaw, limit),
       );
-      artists.forEach((a, i) =>
-        console.log(`${i + 1}. ${a.name} — ${a.playcount} plays`),
+
+      ui.page(
+        `Top ${kindLabel}`,
+        `@${username}  ·  ${periodLabel}  ·  ${artists.length} results`,
+      );
+
+      if (images) {
+        for (const [index, artist] of artists.entries()) {
+          printLines(
+            await renderTrackLines(
+              {
+                name: artist.name,
+                artist: "",
+                image: artist.image,
+                playCount: artist.playcount,
+              },
+              `#${String(index + 1).padStart(2, "0")}  ${artist.name}`,
+              ui.theme,
+              { ...imageOptions, images, nativeImages },
+            ),
+          );
+          ui.blank();
+        }
+        return;
+      }
+
+      ui.table(
+        [
+          { key: "rank", header: "#", align: "right", minWidth: 2 },
+          { key: "name", header: "Artist", minWidth: 24 },
+          { key: "plays", header: "Plays", align: "right", minWidth: 8 },
+        ],
+        artists.map((artist, index) => ({
+          rank: String(index + 1),
+          name: artist.name,
+          plays: artist.playcount,
+        })),
       );
     } else if (subcommand === "tracks") {
-      const tracks = await LastFMClient.user.getTopTracks(
-        username,
-        periodRaw,
-        limit,
+      const tracks = await ui.spinner(
+        `Fetching top tracks for ${username}`,
+        () => LastFMClient.user.getTopTracks(username, periodRaw, limit),
       );
-      tracks.forEach((t, i) =>
-        console.log(
-          `${i + 1}. ${t.name} — ${t.artist["#text"]} (${t.playcount} plays)`,
-        ),
+
+      ui.page(
+        `Top ${kindLabel}`,
+        `@${username}  ·  ${periodLabel}  ·  ${tracks.length} results`,
+      );
+
+      if (images) {
+        for (const [index, track] of tracks.entries()) {
+          printLines(
+            await renderTrackLines(
+              {
+                name: track.name,
+                artist: track.artist["#text"],
+                image: track.image,
+                playCount: track.playcount,
+              },
+              `#${String(index + 1).padStart(2, "0")}  ${track.name}`,
+              ui.theme,
+              { ...imageOptions, images, nativeImages },
+            ),
+          );
+          ui.blank();
+        }
+        return;
+      }
+
+      ui.table(
+        [
+          { key: "rank", header: "#", align: "right", minWidth: 2 },
+          { key: "track", header: "Track", minWidth: 20 },
+          { key: "artist", header: "Artist", minWidth: 16 },
+          { key: "plays", header: "Plays", align: "right", minWidth: 8 },
+        ],
+        tracks.map((track, index) => ({
+          rank: String(index + 1),
+          track: track.name,
+          artist: track.artist["#text"],
+          plays: track.playcount,
+        })),
       );
     } else {
-      const albums = await LastFMClient.user.getTopAlbums(
-        username,
-        periodRaw,
-        limit,
+      const albums = await ui.spinner(
+        `Fetching top albums for ${username}`,
+        () => LastFMClient.user.getTopAlbums(username, periodRaw, limit),
       );
-      albums.forEach((al, i) =>
-        console.log(
-          `${i + 1}. ${al.name} — ${al.artist.name} (${al.playcount} plays)`,
-        ),
+
+      ui.page(
+        `Top ${kindLabel}`,
+        `@${username}  ·  ${periodLabel}  ·  ${albums.length} results`,
+      );
+
+      if (images) {
+        for (const [index, album] of albums.entries()) {
+          printLines(
+            await renderTrackLines(
+              {
+                name: album.name,
+                artist: album.artist.name,
+                image: album.image,
+                playCount: album.playcount,
+              },
+              `#${String(index + 1).padStart(2, "0")}  ${album.name}`,
+              ui.theme,
+              { ...imageOptions, images, nativeImages },
+            ),
+          );
+          ui.blank();
+        }
+        return;
+      }
+
+      ui.table(
+        [
+          { key: "rank", header: "#", align: "right", minWidth: 2 },
+          { key: "album", header: "Album", minWidth: 20 },
+          { key: "artist", header: "Artist", minWidth: 16 },
+          { key: "plays", header: "Plays", align: "right", minWidth: 8 },
+        ],
+        albums.map((album, index) => ({
+          rank: String(index + 1),
+          album: album.name,
+          artist: album.artist.name,
+          plays: album.playcount,
+        })),
       );
     }
+
+    ui.blank();
   },
 };

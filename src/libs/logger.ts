@@ -1,4 +1,4 @@
-import { getEnv } from "@/libs/env";
+import type { UiOptions } from "@/ui/options";
 
 type Level = "debug" | "info" | "warn" | "error";
 
@@ -20,16 +20,24 @@ function isLevel(value: string): value is Level {
   return value in LEVELS;
 }
 
-function getMinLevel(): Level {
-  const raw = getEnv("TSFM_LOG_LEVEL", "info")!.toLowerCase();
+function resolveMinLevel(options?: Partial<UiOptions>): Level {
+  if (options?.verbose) return "debug";
+  if (options?.quiet) return "error";
+
+  const raw = process.env.TSFM_LOG_LEVEL?.toLowerCase() ?? "info";
   if (isLevel(raw)) return raw;
+
   console.warn(
     `[warn] Invalid TSFM_LOG_LEVEL "${raw}", falling back to "info"`,
   );
   return "info";
 }
 
-const minLevel = getMinLevel();
+let minLevel: Level = resolveMinLevel();
+
+export function configureLogger(options?: Partial<UiOptions>): void {
+  minLevel = resolveMinLevel(options);
+}
 
 export function log(level: Level, ...msg: unknown[]) {
   if (LEVELS[level] < LEVELS[minLevel]) return;

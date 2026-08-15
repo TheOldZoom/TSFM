@@ -68,12 +68,36 @@ export function loadConfig(): Config {
         fileConfig.lastfm?.username ??
         defaultConfig.lastfm.username,
     },
+    appearance: {
+      images: fileConfig.appearance?.images ?? defaultConfig.appearance.images,
+      imageMode:
+        fileConfig.appearance?.imageMode ?? defaultConfig.appearance.imageMode,
+      imageSize:
+        fileConfig.appearance?.imageSize ?? defaultConfig.appearance.imageSize,
+      imageWidth: fileConfig.appearance?.imageWidth,
+      imageMaxWidth:
+        fileConfig.appearance?.imageMaxWidth ??
+        defaultConfig.appearance.imageMaxWidth,
+      imageSpacing:
+        fileConfig.appearance?.imageSpacing ??
+        defaultConfig.appearance.imageSpacing,
+    },
   };
 }
 
 export function requireConfig(
   config: Config,
-): asserts config is { lastfm: { apiKey: string; username: string } } {
+): asserts config is {
+  lastfm: { apiKey: string; username: string };
+  appearance: {
+    images: boolean;
+    imageMode: "auto" | "ansi";
+    imageSize: "compact" | "normal" | "large";
+    imageWidth?: number;
+    imageMaxWidth: number;
+    imageSpacing: number;
+  };
+} {
   if (!config.lastfm.apiKey || !config.lastfm.username) {
     throw new ConfigError(
       "TSFM is not configured yet. Run `tsfm setup` to get started.",

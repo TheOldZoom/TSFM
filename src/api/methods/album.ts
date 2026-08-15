@@ -1,5 +1,6 @@
 import type { LastFM } from "../client";
 import { request } from "../request";
+import { enrichImages } from "../enrich";
 
 import type { LastFMAlbumInfo } from "../types/album";
 
@@ -20,6 +21,7 @@ export class AlbumMethods {
         : {}),
     });
 
+    await enrichImages("album.getInfo", [response.album]);
     return response.album;
   }
 }
