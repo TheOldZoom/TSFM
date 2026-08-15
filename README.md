@@ -8,7 +8,7 @@ Why? I got tired of opening a Last.fm tab just to see what I'd been listening to
 
 ## Demo
 
-[![Watch the demo](https://img.youtube.com/vi/rA0nFo1N1Ik/maxresdefault.jpg)](https://youtu.be/rA0nFo1N1Ik)
+[Watch the demo](https://youtu.be/rA0nFo1N1Ik)
 
 ## Install
 
