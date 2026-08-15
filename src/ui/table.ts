@@ -14,10 +14,33 @@ export interface RenderTableOptions {
   quiet?: boolean;
 }
 
+export interface TableSpec {
+  columns: TableColumn[];
+  rows: Record<string, string>[];
+}
+
 function pad(value: string, width: number, align: ColumnAlign): string {
   if (value.length >= width) return value.slice(0, width);
   const padding = width - value.length;
-  return align === "right" ? " ".repeat(padding) + value : value + " ".repeat(padding);
+  return align === "right"
+    ? " ".repeat(padding) + value
+    : value + " ".repeat(padding);
+}
+
+function columnWidths(
+  columns: TableColumn[],
+  rows: Record<string, string>[],
+): number[] {
+  return columns.map((column) => {
+    const cellWidths = rows.map((row) => (row[column.key] ?? "").length);
+    const headerWidth = column.header.length;
+    const minWidth = column.minWidth ?? 0;
+    return Math.max(minWidth, headerWidth, ...cellWidths);
+  });
+}
+
+function tableWidth(widths: number[], columnCount: number): number {
+  return widths.reduce((sum, width) => sum + width, 0) + (columnCount - 1) * 2;
 }
 
 export function renderTable(
@@ -28,12 +51,7 @@ export function renderTable(
   if (rows.length === 0) return [];
 
   const { theme, quiet = false } = options;
-  const widths = columns.map((column) => {
-    const cellWidths = rows.map((row) => (row[column.key] ?? "").length);
-    const headerWidth = column.header.length;
-    const minWidth = column.minWidth ?? 0;
-    return Math.max(minWidth, headerWidth, ...cellWidths);
-  });
+  const widths = columnWidths(columns, rows);
 
   const lines: string[] = [];
 
@@ -46,7 +64,7 @@ export function renderTable(
       })
       .join("  ");
     lines.push(header);
-    lines.push(theme.dim("─".repeat(widths.reduce((sum, width) => sum + width, 0) + (columns.length - 1) * 2)));
+    lines.push(theme.dim("─".repeat(tableWidth(widths, columns.length))));
   }
 
   for (const row of rows) {
@@ -61,4 +79,60 @@ export function renderTable(
   }
 
   return lines;
+}
+
+export function renderTablesStacked(
+  tables: TableSpec[],
+  options: RenderTableOptions,
+): string[] {
+  const sharedWidths = new Map<string, number>();
+
+  for (const table of tables) {
+    const widths = columnWidths(table.columns, table.rows);
+    table.columns.forEach((column, index) => {
+      const current = sharedWidths.get(column.key) ?? 0;
+      sharedWidths.set(column.key, Math.max(current, widths[index]!));
+    });
+  }
+
+  const templateColumns = tables.reduce<TableColumn[]>(
+    (widest, table) =>
+      table.columns.length > widest.length ? table.columns : widest,
+    [],
+  );
+  const canonicalKeys = templateColumns.map((column) => column.key);
+  for (const table of tables) {
+    for (const column of table.columns) {
+      if (!canonicalKeys.includes(column.key)) canonicalKeys.push(column.key);
+    }
+  }
+
+  const output: string[] = [];
+
+  for (const table of tables) {
+    const byKey = new Map(table.columns.map((column) => [column.key, column]));
+    const columns = canonicalKeys.map((key) => {
+      const existing = byKey.get(key);
+      if (existing) {
+        return {
+          ...existing,
+          minWidth: sharedWidths.get(key) ?? existing.minWidth,
+        };
+      }
+      return {
+        key,
+        header: "",
+        align: "left" as const,
+        minWidth: sharedWidths.get(key) ?? 0,
+      };
+    });
+
+    const lines = renderTable(columns, table.rows, options);
+    if (lines.length === 0) continue;
+
+    if (output.length > 0) output.push("");
+    output.push(...lines);
+  }
+
+  return output;
 }

@@ -77,4 +77,49 @@ export class UserMethods {
     await enrichImages("user.getTopAlbums", response.topalbums.album);
     return response.topalbums.album;
   }
+
+  async getTopArtistsPage(
+    user: string,
+    period: TimePeriod = "overall",
+    limit = 50,
+    page = 1,
+  ): Promise<LastFMTopArtists> {
+    const response = await request<{ topartists: LastFMTopArtists }>(
+      this.client,
+      "user.getTopArtists",
+      { user, period, limit, page },
+    );
+    await enrichImages("user.getTopArtists", response.topartists.artist);
+    return response.topartists;
+  }
+
+  async getTopTracksPage(
+    user: string,
+    period: TimePeriod = "overall",
+    limit = 50,
+    page = 1,
+  ): Promise<LastFMTopTracks> {
+    const response = await request<{ toptracks: LastFMTopTracks }>(
+      this.client,
+      "user.getTopTracks",
+      { user, period, limit, page },
+    );
+    await enrichImages("user.getTopTracks", response.toptracks.track);
+    return response.toptracks;
+  }
+
+  async getTopAlbumsPage(
+    user: string,
+    period: TimePeriod = "overall",
+    limit = 50,
+    page = 1,
+  ): Promise<LastFMTopAlbums> {
+    const response = await request<{ topalbums: LastFMTopAlbums }>(
+      this.client,
+      "user.getTopAlbums",
+      { user, period, limit, page },
+    );
+    await enrichImages("user.getTopAlbums", response.topalbums.album);
+    return response.topalbums;
+  }
 }

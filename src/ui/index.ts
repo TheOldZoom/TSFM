@@ -6,7 +6,12 @@ import {
   type UiOptions,
 } from "./options";
 import { createTheme, icons, type Theme } from "./theme";
-import { renderTable, type TableColumn } from "./table";
+import {
+  renderTable,
+  renderTablesStacked,
+  type TableColumn,
+  type TableSpec,
+} from "./table";
 import { withSpinner } from "./spinner";
 import {
   formatError,
@@ -21,7 +26,7 @@ import {
 export { parseGlobalFlags, parseCommandArgv, defaultUiOptions, isGlobalFlag };
 export type { UiOptions } from "./options";
 export { icons, createTheme, type Theme };
-export { renderTable, type TableColumn };
+export { renderTable, renderTablesStacked, type TableColumn, type TableSpec };
 export { withSpinner };
 
 export interface Ui {
@@ -32,6 +37,7 @@ export interface Ui {
   section(title: string, body: string[]): void;
   keyValue(label: string, value: string): void;
   table(columns: TableColumn[], rows: Record<string, string>[]): void;
+  tables(tables: TableSpec[]): void;
   nowPlaying(artist: string, track: string): void;
   error(message: string): void;
   hint(message: string): void;
@@ -71,7 +77,19 @@ export function createUi(options: UiOptions): Ui {
     },
     table(columns, rows) {
       if (options.output !== "pretty") return;
-      for (const line of renderTable(columns, rows, { theme, quiet: options.quiet })) {
+      for (const line of renderTable(columns, rows, {
+        theme,
+        quiet: options.quiet,
+      })) {
+        console.log(line);
+      }
+    },
+    tables(tables) {
+      if (options.output !== "pretty") return;
+      for (const line of renderTablesStacked(tables, {
+        theme,
+        quiet: options.quiet,
+      })) {
         console.log(line);
       }
     },
