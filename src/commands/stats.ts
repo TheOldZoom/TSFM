@@ -7,6 +7,7 @@ import { formatWithCommas } from "@/libs/numbers";
 import { createUi } from "@/ui";
 import { isMachineOutput, writeOutput } from "@/output";
 import type { TimePeriod } from "@/api/types/top";
+import { buildStats } from "@/libs/build-stats";
 
 const PERIODS = ["7day", "1month", "12month", "overall"] as const;
 type StatsPeriod = (typeof PERIODS)[number];
@@ -33,6 +34,20 @@ const PERIOD_ALIASES: Record<string, StatsPeriod> = {
 export const statsCommand: Command = {
   name: "stats",
   description: "Show top artists, tracks, and albums",
+  aliases: ["s"],
+  usage: "tsfm stats [--user <name>] [--period <period>] [--limit <n>]",
+  flags: [
+    {
+      flag: "--user <name>",
+      description: "Last.fm username (defaults to your configured username)",
+    },
+    {
+      flag: "--period <period>",
+      description:
+        "7day, 1month, 12month, or overall (aliases: week, month, year, all) (default: 7day)",
+    },
+    { flag: "--limit <n>", description: "Items per list, 1-50 (default: 10)" },
+  ],
   async run(ctx) {
     requireConfig(ctx.config);
 
@@ -59,72 +74,8 @@ export const statsCommand: Command = {
     }
 
     const ui = createUi(ctx.options);
-    const result = await ui.spinner(
-      `Building statistics for ${username}`,
-      async () => {
-        const [profile, artists, tracks, albums] = await Promise.all([
-          LastFMClient.user.getInfo(username),
-          LastFMClient.user.getTopArtists(
-            username,
-            period as TimePeriod,
-            limit,
-          ),
-          LastFMClient.user.getTopTracks(username, period as TimePeriod, limit),
-          LastFMClient.user.getTopAlbums(username, period as TimePeriod, limit),
-        ]);
-
-        const overallPlayCount = Number(profile.playcount || 0);
-        const topTrackPlays = tracks.reduce(
-          (total, track) => total + Number(track.playcount || 0),
-          0,
-        );
-
-        const profileExtra = profile as {
-          artist_count?: string;
-          track_count?: string;
-          album_count?: string;
-          registered?: { unixtime?: string };
-        };
-        const registeredUnix = Number(profileExtra.registered?.unixtime || 0);
-
-        const topArtistPlayCount = Number(artists[0]?.playcount || 0);
-        const topArtistShare =
-          overallPlayCount > 0 ? topArtistPlayCount / overallPlayCount : 0;
-
-        return {
-          user: username,
-          period,
-          periodLabel: PERIOD_LABELS[period],
-          overallPlayCount,
-          topTrackPlayCount: topTrackPlays,
-          topArtistShare,
-          library: {
-            uniqueArtists: Number(profileExtra.artist_count || 0),
-            uniqueTracks: Number(profileExtra.track_count || 0),
-            uniqueAlbums: Number(profileExtra.album_count || 0),
-            memberSince: registeredUnix
-              ? new Date(registeredUnix * 1_000).toISOString().slice(0, 10)
-              : undefined,
-          },
-          topArtists: artists.map((artist, index) => ({
-            rank: index + 1,
-            name: artist.name,
-            playCount: artist.playcount,
-          })),
-          topTracks: tracks.map((track, index) => ({
-            rank: index + 1,
-            name: track.name,
-            artist: track.artist.name,
-            playCount: track.playcount,
-          })),
-          topAlbums: albums.map((album, index) => ({
-            rank: index + 1,
-            name: album.name,
-            artist: album.artist.name,
-            playCount: album.playcount,
-          })),
-        };
-      },
+    const result = await ui.spinner(`Building statistics for ${username}`, () =>
+      buildStats(username, period as TimePeriod, limit),
     );
 
     if (isMachineOutput(ctx.options.output)) {

@@ -6,6 +6,8 @@ import { isMachineOutput, writeOutput } from "@/output";
 export const configCommand: Command = {
   name: "config",
   description: "Show configuration, or its file path with `path`",
+  aliases: ["cfg"],
+  usage: "tsfm config [path]",
   run(ctx) {
     const ui = createUi(ctx.options);
     const [subcommand] = ctx.args;

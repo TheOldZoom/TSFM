@@ -94,7 +94,6 @@ export function supportsNativeImages(): boolean {
   return nativeImageProtocol() !== undefined;
 }
 
-/** Render an inline image with the terminal's native graphics protocol. */
 export async function renderNativeImage(
   source: string,
   width: number,
@@ -122,9 +121,7 @@ function renderKittyImage(image: Buffer, width: number): string {
     const chunk = payload.slice(index, index + chunkSize);
     const more = index + chunkSize < payload.length ? 1 : 0;
     const control =
-      index === 0
-        ? `a=T,f=100,t=d,c=${width},m=${more}`
-        : `m=${more}`;
+      index === 0 ? `a=T,f=100,t=d,c=${width},m=${more}` : `m=${more}`;
     chunks.push(`\x1b_G${control};${chunk}\x1b\\`);
   }
 
@@ -139,7 +136,10 @@ function sample(
   dstH: number,
 ): Rgb {
   const srcX = Math.min(image.width - 1, Math.floor((x * image.width) / dstW));
-  const srcY = Math.min(image.height - 1, Math.floor((y * image.height) / dstH));
+  const srcY = Math.min(
+    image.height - 1,
+    Math.floor((y * image.height) / dstH),
+  );
   const i = (srcY * image.width + srcX) * image.channels;
   return [image.data[i]!, image.data[i + 1]!, image.data[i + 2]!];
 }

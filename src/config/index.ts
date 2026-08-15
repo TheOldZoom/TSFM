@@ -67,6 +67,11 @@ export function loadConfig(): Config {
         getEnv("LASTFM_USERNAME") ??
         fileConfig.lastfm?.username ??
         defaultConfig.lastfm.username,
+      secret:
+        getEnv("LASTFM_API_SECRET") ??
+        fileConfig.lastfm?.secret ??
+        defaultConfig.lastfm.secret,
+      session: fileConfig.lastfm?.session ?? defaultConfig.lastfm.session,
     },
     appearance: {
       images: fileConfig.appearance?.images ?? defaultConfig.appearance.images,
@@ -82,26 +87,32 @@ export function loadConfig(): Config {
         fileConfig.appearance?.imageSpacing ??
         defaultConfig.appearance.imageSpacing,
     },
+    cache: {
+      enabled: fileConfig.cache?.enabled ?? defaultConfig.cache.enabled,
+    },
   };
 }
 
-export function requireConfig(
-  config: Config,
-): asserts config is {
+export function requireConfig(config: Config): asserts config is Config & {
   lastfm: { apiKey: string; username: string };
-  appearance: {
-    images: boolean;
-    imageMode: "auto" | "ansi";
-    imageSize: "compact" | "normal" | "large";
-    imageWidth?: number;
-    imageMaxWidth: number;
-    imageSpacing: number;
-  };
 } {
   if (!config.lastfm.apiKey || !config.lastfm.username) {
     throw new ConfigError(
       "TSFM is not configured yet. Run `tsfm setup` to get started.",
     );
+  }
+}
+
+export function requireSession(config: Config): asserts config is Config & {
+  lastfm: { apiKey: string; session: { key: string; username: string } };
+} {
+  if (!config.lastfm.apiKey) {
+    throw new ConfigError(
+      "TSFM is not configured yet. Run `tsfm setup` to get started.",
+    );
+  }
+  if (!config.lastfm.session?.key) {
+    throw new ConfigError("You're not logged in. Run `tsfm login` first.");
   }
 }
 

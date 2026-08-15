@@ -122,91 +122,69 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 
 **Goal:** TSFM can provide detailed listening statistics.
 
----
+## Phase 8 — Social
 
-## Phase 8 — Discovery
-
-- [ ] Add `tsfm trending`
-- [ ] Add trending artists
-- [ ] Add trending tracks
-- [ ] Add trending albums
-- [ ] Add similar artists
-- [ ] Add similar tracks
-- [ ] Add artist tags
-- [ ] Add track tags
-- [ ] Add album tags
-- [ ] Add music recommendations
-
-**Goal:** TSFM can be used to discover music as well as analyze it.
-
----
-
-## Phase 9 — Social
-
-- [ ] Add `tsfm compare`
-- [ ] Compare two Last.fm users
-- [ ] Compare top artists
-- [ ] Compare top tracks
-- [ ] Compare top albums
-- [ ] Find shared artists
-- [ ] Find shared tracks
-- [ ] Calculate listening similarity
-- [ ] Add user discovery
+- [x] Add `tsfm compare`
+- [x] Compare two Last.fm users
+- [x] Compare top artists
+- [x] Compare top tracks
+- [x] Compare top albums
+- [x] Find shared artists
+- [x] Find shared tracks
+- [x] Calculate listening similarity
+- [x] Add user discovery
 
 **Goal:** TSFM can compare listening habits between Last.fm users.
 
 ---
 
-## Phase 10 — Last.fm Actions
+## Phase 9 — Last.fm Actions
 
-- [ ] Add Last.fm session authentication
-- [ ] Add session management
-- [ ] Add track loving
-- [ ] Add track unloving
-- [ ] Add scrobbling
-- [ ] Add now-playing updates
-- [ ] Add tag management
-- [ ] Add confirmation prompts
+- [x] Add Last.fm session authentication
+- [x] Add session management
+- [x] Add track loving
+- [x] Add track unloving
+- [x] Add scrobbling
+- [x] Add now-playing updates
+- [x] Add tag management
+- [x] Add confirmation prompts
 
 **Goal:** TSFM can interact with Last.fm instead of being read-only.
 
 ---
 
-## Phase 11 — Data & Export
+## Phase 10 — Data & Export
 
-- [ ] Add local cache
-- [ ] Add cache expiration
-- [ ] Add offline mode
-- [ ] Add cache management
-- [ ] Add listening history storage
-- [ ] Add history export
-- [ ] Add statistics export
-- [ ] Add JSON export
-- [ ] Add CSV export
-- [ ] Add M3U playlist export
+- [x] Add local cache
+- [x] Add cache expiration
+- [x] Add offline mode
+- [x] Add cache management
+- [x] Add listening history storage
+- [x] Add history export
+- [x] Add statistics export
+- [x] Add JSON export
+- [x] Add CSV export
+- [x] Add M3U playlist export
 
 **Goal:** TSFM can preserve, reuse, and export listening data.
 
 ---
 
-## Phase 12 — CLI Experience
+## Phase 11 — CLI Experience
 
-- [ ] Add command aliases
-- [ ] Add command suggestions
-- [ ] Add interactive prompts
-- [ ] Add shell completion
-- [ ] Add Bash completion
-- [ ] Add Zsh completion
-- [ ] Add Fish completion
-- [ ] Add man page
-- [ ] Improve help output
-- [ ] Improve keyboard-driven workflows
+- [x] Add command aliases
+- [x] Add help command
+- [x] Support --help / -h on every command to show its flags and usage
+- [x] Improve help output
+- [x] Add command suggestions
+- [x] Add interactive prompts
+- [x] Improve keyboard-driven workflows
 
 **Goal:** Make TSFM fast and pleasant for daily terminal use.
 
 ---
 
-## Phase 13 — Distribution
+## Phase 12 — Distribution
 
 - [ ] Publish npm package
 - [ ] Support `npx tsfm`
@@ -224,7 +202,7 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 
 ---
 
-## Phase 14 — v1.0
+## Phase 13 — v1.0
 
 - [ ] Stabilize CLI interface
 - [ ] Stabilize configuration format

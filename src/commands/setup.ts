@@ -5,6 +5,7 @@ import { getConfigPath, loadConfig, writeConfigFile } from "@/config";
 export const setupCommand: Command = {
   name: "setup",
   description: "Setup TSFM",
+  usage: "tsfm setup",
   async run() {
     const current = loadConfig();
 
@@ -25,6 +26,15 @@ export const setupCommand: Command = {
                 return "An API key is required.";
               }
             },
+          }),
+        secret: () =>
+          p.text({
+            message:
+              "Last.fm API secret (optional, enables login/love/scrobble)",
+            placeholder: current.lastfm.secret
+              ? "leave blank to keep current"
+              : "leave blank to skip",
+            initialValue: "",
           }),
         username: () =>
           p.text({
@@ -105,6 +115,12 @@ export const setupCommand: Command = {
               }
             },
           }),
+        cacheEnabled: () =>
+          p.confirm({
+            message:
+              "Cache Last.fm responses locally to speed up repeat lookups",
+            initialValue: current.cache.enabled,
+          }),
       },
       {
         onCancel: () => {
@@ -118,6 +134,8 @@ export const setupCommand: Command = {
       lastfm: {
         apiKey: group.apiKey.trim() || current.lastfm.apiKey,
         username: group.username.trim() || current.lastfm.username,
+        secret: group.secret.trim() || current.lastfm.secret,
+        session: current.lastfm.session,
       },
       appearance: {
         images: group.images,
@@ -126,6 +144,9 @@ export const setupCommand: Command = {
         imageWidth: group.imageWidth ? Number(group.imageWidth) : undefined,
         imageMaxWidth: Number(group.imageMaxWidth),
         imageSpacing: Number(group.imageSpacing),
+      },
+      cache: {
+        enabled: group.cacheEnabled,
       },
     };
 

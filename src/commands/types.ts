@@ -7,8 +7,16 @@ export interface CommandContext {
   options: UiOptions;
 }
 
+export interface FlagSpec {
+  flag: string;
+  description: string;
+}
+
 export interface Command {
   name: string;
   description: string;
+  aliases?: string[];
+  usage?: string;
+  flags?: FlagSpec[];
   run(ctx: CommandContext): Promise<void> | void;
 }

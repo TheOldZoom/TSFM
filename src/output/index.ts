@@ -25,14 +25,17 @@ export function writeMachineError(
     return;
   }
 
-  console.error(`error,message\n${csvValue(String(code))},${csvValue(message)}`);
+  console.error(
+    `error,message\n${csvValue(String(code))},${csvValue(message)}`,
+  );
 }
 
-function toCsv(value: unknown): string {
+export function toCsv(value: unknown): string {
   const records = Array.isArray(value) ? value : [value];
   const rows = records
-    .filter((record): record is Record<string, unknown> =>
-      typeof record === "object" && record !== null,
+    .filter(
+      (record): record is Record<string, unknown> =>
+        typeof record === "object" && record !== null,
     )
     .map((record) => flattenRecord(record));
 
@@ -41,17 +44,25 @@ function toCsv(value: unknown): string {
   const headers = [...new Set(rows.flatMap((row) => Object.keys(row)))];
   return [
     headers.map(csvValue).join(","),
-    ...rows.map((row) => headers.map((header) => csvValue(row[header] ?? "")).join(",")),
+    ...rows.map((row) =>
+      headers.map((header) => csvValue(row[header] ?? "")).join(","),
+    ),
   ].join("\n");
 }
 
-function flattenRecord(value: Record<string, unknown>, prefix = ""): Record<string, string> {
+function flattenRecord(
+  value: Record<string, unknown>,
+  prefix = "",
+): Record<string, string> {
   const result: Record<string, string> = {};
 
   for (const [key, raw] of Object.entries(value)) {
     const name = prefix ? `${prefix}.${key}` : key;
     if (raw !== null && typeof raw === "object" && !Array.isArray(raw)) {
-      Object.assign(result, flattenRecord(raw as Record<string, unknown>, name));
+      Object.assign(
+        result,
+        flattenRecord(raw as Record<string, unknown>, name),
+      );
     } else if (Array.isArray(raw)) {
       result[name] = JSON.stringify(raw);
     } else {

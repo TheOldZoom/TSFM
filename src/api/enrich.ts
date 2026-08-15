@@ -2,9 +2,14 @@ import LastFMClient from "@/api";
 import type { LastFMImage } from "@/api/types/common";
 import type { LastFMTrack } from "@/api/types/track";
 import { logger } from "@/libs/logger";
+import { cacheGet, cacheSet } from "@/cache/store";
+import { cacheKey } from "@/cache/keys";
+import { ttlFor } from "@/cache/ttl";
+import { isCacheEnabled, isOfflineMode } from "@/cache/context";
 
 const LASTFM_PLACEHOLDER_IMAGE_ID = "2a96cbd8b46e442fc41c2b86b821562f";
 const MAX_IMAGE_ENRICHMENT_CONCURRENCY = 6;
+const IMAGE_CACHE_METHOD = "image.page";
 
 interface ImageEntity {
   name: string;
@@ -38,7 +43,7 @@ export async function enrichImages<T extends ImageEntity>(
         if (!entity || hasUsableImage(entity.image)) continue;
 
         try {
-          const imageUrl = await fetchPageImage(entity.url);
+          const imageUrl = await fetchPageImageCached(entity.url);
           if (imageUrl) {
             entity.image = [{ "#text": imageUrl, size: "extralarge" }];
           }
@@ -54,6 +59,32 @@ export async function enrichImages<T extends ImageEntity>(
   );
 
   await Promise.all(workers);
+}
+
+async function fetchPageImageCached(
+  pageUrl: string,
+): Promise<string | undefined> {
+  const key = cacheKey(IMAGE_CACHE_METHOD, { url: pageUrl });
+
+  if (isCacheEnabled()) {
+    const cached = cacheGet<string | null>(key);
+    if (cached !== undefined) {
+      logger.debug("Image cache hit", { url: pageUrl });
+      return cached ?? undefined;
+    }
+  }
+
+  if (isOfflineMode()) {
+    return undefined;
+  }
+
+  const imageUrl = await fetchPageImage(pageUrl);
+
+  if (isCacheEnabled()) {
+    cacheSet(key, imageUrl ?? null, ttlFor(IMAGE_CACHE_METHOD));
+  }
+
+  return imageUrl;
 }
 
 async function fetchPageImage(url: string): Promise<string | undefined> {

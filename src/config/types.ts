@@ -2,6 +2,11 @@ export interface Config {
   lastfm: {
     apiKey?: string;
     username?: string;
+    secret?: string;
+    session?: {
+      key: string;
+      username: string;
+    };
   };
   appearance: {
     images: boolean;
@@ -10,5 +15,8 @@ export interface Config {
     imageWidth?: number;
     imageMaxWidth: number;
     imageSpacing: number;
+  };
+  cache: {
+    enabled: boolean;
   };
 }

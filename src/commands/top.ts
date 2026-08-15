@@ -1,8 +1,10 @@
 import { parseArgs } from "node:util";
+import * as p from "@clack/prompts";
 import type { Command } from "./types";
 import LastFMClient from "@/api";
 import { requireConfig } from "@/config";
 import { UsageError } from "@/libs/errors";
+import { suggestClosest, didYouMean } from "@/libs/suggest";
 import type { TimePeriod } from "@/api/types/top";
 import { createUi } from "@/ui";
 import { isMachineOutput, writeOutput } from "@/output";
@@ -12,6 +14,9 @@ import {
   shouldRenderImages,
   shouldUseNativeImages,
 } from "@/ui/render-track";
+
+const TOP_TYPES = ["artists", "tracks", "albums"] as const;
+type TopType = (typeof TOP_TYPES)[number];
 
 const VALID_PERIODS = [
   "overall",
@@ -38,16 +43,55 @@ function isValidPeriod(value: string): value is TimePeriod {
 export const topCommand: Command = {
   name: "top",
   description: "Show top artists, tracks, or albums",
+  aliases: ["t"],
+  usage:
+    "tsfm top <artists|tracks|albums> [--period <period>] [--limit <n>] [--user <name>]",
+  flags: [
+    {
+      flag: "--user <name>",
+      description: "Last.fm username (defaults to your configured username)",
+    },
+    {
+      flag: "--limit <n>",
+      description: "Number of results to show (default: 10)",
+    },
+    {
+      flag: "--period <period>",
+      description:
+        "overall, 7day, 1month, 3month, 6month, or 12month (default: overall)",
+    },
+  ],
   async run(ctx) {
     requireConfig(ctx.config);
 
     const ui = createUi(ctx.options);
 
-    const [subcommand, ...rest] = ctx.args;
+    let [subcommand, ...rest] = ctx.args;
 
-    if (!subcommand || !["artists", "tracks", "albums"].includes(subcommand)) {
+    if (!subcommand) {
+      if (ctx.options.output === "pretty" && process.stdout.isTTY) {
+        const answer = await p.select({
+          message: "Show top...",
+          options: [
+            { value: "artists", label: "Artists" },
+            { value: "tracks", label: "Tracks" },
+            { value: "albums", label: "Albums" },
+          ],
+        });
+        if (p.isCancel(answer)) {
+          p.cancel("Cancelled.");
+          return;
+        }
+        subcommand = answer;
+      } else {
+        throw new UsageError(
+          "Usage: tsfm top <artists|tracks|albums> [--period <period>] [--limit <n>] [--user <name>]",
+        );
+      }
+    } else if (!(TOP_TYPES as readonly string[]).includes(subcommand)) {
+      const hint = didYouMean(suggestClosest(subcommand, TOP_TYPES, 3));
       throw new UsageError(
-        "Usage: tsfm top <artists|tracks|albums> [--period <period>] [--limit <n>] [--user <name>]",
+        `Unknown top type "${subcommand}". ${hint || `Must be one of: ${TOP_TYPES.join(", ")}.`}`,
       );
     }
 

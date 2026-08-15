@@ -14,6 +14,14 @@ import {
 export const userCommand: Command = {
   name: "user",
   description: "Show Last.fm user information",
+  aliases: ["whoami"],
+  usage: "tsfm user [--user <name>]",
+  flags: [
+    {
+      flag: "--user <name>",
+      description: "Last.fm username (defaults to your configured username)",
+    },
+  ],
   async run(ctx) {
     requireConfig(ctx.config);
 
@@ -42,7 +50,9 @@ export const userCommand: Command = {
       return;
     }
 
-    const displayName = info.realname ? `${info.realname} (${info.name})` : info.name;
+    const displayName = info.realname
+      ? `${info.realname} (${info.name})`
+      : info.name;
     const images = shouldRenderImages(ctx.options);
     const nativeImages = shouldUseNativeImages(ctx.options);
     const imageOptions = ctx.config.appearance;

@@ -1,7 +1,10 @@
+import { loadConfig } from "@/config";
 import { LastFM } from "./client";
 
+const config = loadConfig();
 const LastFMClient = new LastFM({
-  apiKey: process.env.LASTFM_API_KEY!,
+  apiKey: config.lastfm.apiKey ?? "",
+  apiSecret: config.lastfm.secret,
+  sessionKey: config.lastfm.session?.key,
 });
-
 export default LastFMClient;

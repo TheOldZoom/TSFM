@@ -13,3 +13,7 @@ export class UsageError extends TsfmError {
     super(message);
   }
 }
+
+export class AuthError extends TsfmError {}
+
+export class OfflineError extends TsfmError {}

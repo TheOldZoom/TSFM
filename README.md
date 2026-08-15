@@ -65,7 +65,6 @@ tsfm recent --json
 - JSON output
 - CSV output
 - Local caching
-- Shell-friendly
 - Interactive terminal UI
 - Keyboard-focused
 - Open Source!!
@@ -103,38 +102,11 @@ tsfm setup
 
 Environment variables can also be used for scripts and automated environments.
 
-### Artwork
-
-Artwork is enabled by default for commands that provide it. Disable it persistently
-in `~/.config/tsfm.yaml`:
-
-```yaml
-appearance:
-  images: false
-```
-
-Use `--images` or `--no-images` with any command to override the setting for one run.
-`--images` also forces ANSI color output, which is required to draw the artwork.
-
-During setup, choose **Native images when supported** to use Kitty, Ghostty,
-iTerm2, or WezTerm's image protocol; other terminals automatically use ANSI
-artwork. Choose **ANSI artwork only** if you prefer the text-art appearance.
-
-Additional appearance settings let you tune artwork to your terminal:
-
-```yaml
-appearance:
-  imageSize: normal # compact, normal, or large
-  imageWidth: 24 # optional target width; omit for responsive sizing
-  imageMaxWidth: 40 # upper limit for responsive or target sizing
-  imageSpacing: 2 # spaces between ANSI artwork and its details
-```
-
 ## Roadmap
 
 TSFM is still being built.
 
-Check out the [Roadmap](./ROADMAP.md) for more information about what's planned and what's currently being worked on.
+Check out the [Roadmap](./roadmap.md) for more information about what's planned and what's currently being worked on.
 
 ## Contributing
 

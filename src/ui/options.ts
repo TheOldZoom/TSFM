@@ -5,6 +5,8 @@ export interface UiOptions {
   images: boolean;
   imageMode: "auto" | "ansi";
   output: "pretty" | "json" | "csv";
+  cache: boolean;
+  offline: boolean;
 }
 
 export const defaultUiOptions: UiOptions = {
@@ -14,6 +16,8 @@ export const defaultUiOptions: UiOptions = {
   images: true,
   imageMode: "auto",
   output: "pretty",
+  cache: true,
+  offline: false,
 };
 
 const GLOBAL_FLAGS = new Set([
@@ -26,6 +30,8 @@ const GLOBAL_FLAGS = new Set([
   "--no-images",
   "--json",
   "--csv",
+  "--no-cache",
+  "--offline",
 ]);
 
 export function isGlobalFlag(arg: string): boolean {
@@ -68,6 +74,12 @@ export function parseGlobalFlags(argv: string[]): {
       case "--csv":
         outputOverride = "csv";
         break;
+      case "--no-cache":
+        options.cache = false;
+        break;
+      case "--offline":
+        options.offline = true;
+        break;
       default:
         args.push(arg);
     }
@@ -100,7 +112,8 @@ export function parseCommandArgv(argv: string[]): {
   imagesOverride?: boolean;
   outputOverride?: "json" | "csv";
 } {
-  const { options, args, imagesOverride, outputOverride } = parseGlobalFlags(argv);
+  const { options, args, imagesOverride, outputOverride } =
+    parseGlobalFlags(argv);
   const [commandName, ...commandArgs] = args;
 
   return { commandName, commandArgs, options, imagesOverride, outputOverride };

@@ -15,6 +15,14 @@ import {
 export const nowCommand: Command = {
   name: "now",
   description: "Show currently playing track",
+  aliases: ["np"],
+  usage: "tsfm now [--user <name>]",
+  flags: [
+    {
+      flag: "--user <name>",
+      description: "Last.fm username (defaults to your configured username)",
+    },
+  ],
   async run(ctx) {
     requireConfig(ctx.config);
 
@@ -28,8 +36,9 @@ export const nowCommand: Command = {
 
     const username = (values.user as string) ?? ctx.config.lastfm.username;
 
-    const recent = await ui.spinner(`Fetching now playing for ${username}`, () =>
-      LastFMClient.user.getRecentTracks(username, 1),
+    const recent = await ui.spinner(
+      `Fetching now playing for ${username}`,
+      () => LastFMClient.user.getRecentTracks(username, 1),
     );
 
     const track = recent.track.find(

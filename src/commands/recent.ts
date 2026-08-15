@@ -16,6 +16,18 @@ import {
 export const recentCommand: Command = {
   name: "recent",
   description: "Show recently played tracks",
+  aliases: ["r"],
+  usage: "tsfm recent [--user <name>] [--limit <n>]",
+  flags: [
+    {
+      flag: "--user <name>",
+      description: "Last.fm username (defaults to your configured username)",
+    },
+    {
+      flag: "--limit <n>",
+      description: "Number of tracks to show (default: 10)",
+    },
+  ],
   async run(ctx) {
     requireConfig(ctx.config);
 
