@@ -19,17 +19,17 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 
 ## Phase 2 — Last.fm API
 
-- [ ] Create Last.fm API client
-- [ ] Add API key authentication
-- [ ] Add typed API responses
-- [ ] Add API error handling
-- [ ] Add request timeout handling
-- [ ] Add retry handling
-- [ ] Add user API methods
-- [ ] Add track API methods
-- [ ] Add artist API methods
-- [ ] Add album API methods
-- [ ] Add chart API methods
+- [x] Create Last.fm API client
+- [x] Add API key authentication
+- [x] Add typed API responses
+- [x] Add API error handling
+- [x] Add request timeout handling
+- [x] Add retry handling
+- [x] Add user API methods
+- [x] Add track API methods
+- [x] Add artist API methods
+- [x] Add album API methods
+- [x] Add chart API methods
 
 **Goal:** TSFM has a reliable and reusable Last.fm API layer.
 
