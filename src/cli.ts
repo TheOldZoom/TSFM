@@ -1,4 +1,3 @@
-#!/usr/bin/env bun
 import * as p from "@clack/prompts";
 import { commands, resolveCommand } from "./commands";
 import { loadConfig } from "./config";
