@@ -186,11 +186,10 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 
 ## Phase 12 — Distribution
 
-- [ ] Publish npm package
-- [ ] Support `npx tsfm`
-- [ ] Support `bunx tsfm`
-- [ ] Add GitHub Releases
-- [ ] Add automated release workflow
+- [x] Publish npm package
+- [x] Support `npx tsfm`
+- [x] Support `bunx tsfm`
+- [x] Add GitHub Releases
 - [ ] Add changelog
 - [ ] Add installation documentation
 
