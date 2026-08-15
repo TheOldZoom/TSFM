@@ -45,7 +45,8 @@
     "dev": "bun run src/cli.ts",
     "build": "rm -rf dist && bun build ./src/cli.ts --outdir ./dist --target node",
     "start": "node dist/cli.js",
-    "prepublishOnly": "bun run build"
+    "prepublishOnly": "bun run build",
+    "docs": "bun run scripts/genDocs.ts"
   },
   "publishConfig": {
     "access": "public"

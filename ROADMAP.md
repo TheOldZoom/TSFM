@@ -190,8 +190,7 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 - [x] Support `npx tsfm`
 - [x] Support `bunx tsfm`
 - [x] Add GitHub Releases
-- [ ] Add changelog
-- [ ] Add installation documentation
+- [x] Add installation documentation
 
 **Goal:** Make TSFM easy to install and distribute.
 
@@ -199,7 +198,7 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 
 ## Phase 13 — v1.0
 
-- [ ] Complete documentation
+- [x] Complete documentation
 - [ ] Fix cross-platform issues
 
 **Goal:** TSFM is a stable, production-ready Last.fm CLI.

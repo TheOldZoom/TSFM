@@ -2,126 +2,75 @@
 
 > Your Last.fm, in the terminal
 
-TSFM is an open-source Last.fm CLI built with TypeScript and Bun.
+TSFM is a small open-source CLI I built with TypeScript and Bun. It's a fast way to check your music and listening history without opening a browser.
 
-It is a complete recoding of [GoFM](https://github.com/TheOldZoom/gofm), originally written in Go. TSFM keeps the original idea while rebuilding it with a modern TypeScript architecture and a focus on a better CLI experience.
+## Why I made this
 
-## Why TSFM?
+I got tired of opening a Last.fm tab just to see what I'd been listening to. Now I don't. I just run a command.
 
-GoFM started as a simple way to interact with Last.fm from the terminal.
+## Install
 
-TSFM is the continuation of that idea.
+You'll need Bun or npm on your computer.
 
-Instead of opening a browser just to check your recent tracks, look at your listening statistics, or explore your music, TSFM lets you do it directly from your terminal.
+With bun:
 
-The project is being rebuilt from the ground up in TypeScript and Bun, giving it a cleaner architecture and making it easier to expand with new features.
+```bash
+bun add -g @theoldzoom/tsfm
+```
 
-## How does it work?
+With npm:
 
-Connect TSFM to your Last.fm account and start using it from your terminal.
+```bash
+npm install -g @theoldzoom/tsfm
+```
+
+Make sure you use `-g` (global) so it's installed everywhere, not just one folder.
+
+The package is called `@theoldzoom/tsfm`, but once it's installed, you just type `tsfm` to use it.
+
+## Getting started
+
+Not sure what to run? Just type `tsfm` by itself. It'll show you every command and ask which one you want.
+
+First, connect your account:
 
 ```bash
 tsfm setup
 ```
 
-Then you can view your recent tracks:
+Then you're good to go. A few things to try:
 
 ```bash
-tsfm recent
+tsfm recent          # what you've been playing
+tsfm top artists     # your top artists
+tsfm user            # your profile
 ```
 
-Check your top artists:
-
-```bash
-tsfm top artists
-```
-
-Or get information about your Last.fm account:
-
-```bash
-tsfm user
-```
-
-TSFM can also provide machine-readable output for scripts and other tools.
+Want JSON instead? Just add `--json` to most commands:
 
 ```bash
 tsfm recent --json
 ```
 
-## Features
+## What it can do
 
-- Last.fm integration
-- Recoded from GoFM
-- Recent tracks
-- Currently playing track
-- User information
-- Top artists
-- Top tracks
-- Top albums
-- Listening statistics
-- Trending music
-- Music discovery
-- User comparisons
-- JSON output
-- CSV output
-- Local caching
-- Interactive terminal UI
-- Keyboard-focused
-- Open Source!!
+- See your recent tracks, and what's playing right now
+- Check your top artists, tracks, and albums
+- Look at your listening stats
+- Compare your listening with someone else's
+- Get JSON or CSV output if you want to use it somewhere else
+- Fast, keyboard-only, stays in the terminal
 
-## Terminal First
+Want the full list, with every flag explained? Check out [docs/commands](./docs/commands).
 
-TSFM is designed to feel at home in the terminal.
+## Settings
 
-Instead of opening a browser and navigating through Last.fm, you can quickly check your music with a command:
-
-```text
-$ tsfm recent
-
-  NOW PLAYING
-
-  Artist Name
-  Track Name
-```
-
-Commands are designed to be short, predictable, and easy to remember.
-
-## Configuration
-
-TSFM stores its configuration locally using the standard XDG configuration directory.
-
-```text
-~/.config/tsfm/
-```
-
-You can configure TSFM interactively:
-
-```bash
-tsfm setup
-```
-
-Environment variables can also be used for scripts and automated environments.
-
-## Roadmap
-
-TSFM is still being built.
-
-Check out the [Roadmap](./roadmap.md) for more information about what's planned and what's currently being worked on.
+Your config is saved at `~/.config/tsfm.yaml`. Run `tsfm setup` again anytime you want to change something.
 
 ## Contributing
 
-TSFM is open source, and contributions are more than welcome.
-
-It can be any kind of contribution: a bug fix, a new feature, a documentation improvement, or even just an idea.
-
-Feel free to open an issue or submit a pull request.
+Found a bug, or have an idea? Open an issue or send a pull request. Help is always welcome.
 
 ## License
 
-TSFM is licensed under the **MIT** license.
-
-See [LICENSE](./LICENSE) for more information.
-
-## TSFM
-
-> _GoFM, rebuilt for TypeScript._
+MIT. See [LICENSE](./LICENSE) for the details.
