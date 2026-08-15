@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import * as p from "@clack/prompts";
 import { commands, resolveCommand } from "./commands";
 import { loadConfig } from "./config";

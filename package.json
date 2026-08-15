@@ -5,7 +5,10 @@
   "type": "module",
   "module": "src/index.ts",
   "bin": {
-    "tsfm": "./dist/cli.js"
+    "tsfm": "dist/cli.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "dev": "bun run src/cli.ts",
