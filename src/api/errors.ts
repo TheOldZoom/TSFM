@@ -1,4 +1,3 @@
-// api/errors.ts
 export class LastFMApiError extends Error {
   code: number;
   constructor(message: string, code: number) {

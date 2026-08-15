@@ -1,4 +1,3 @@
-// api/methods/chart.ts
 import type { LastFM } from "../client";
 import { request } from "../request";
 

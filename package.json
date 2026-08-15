@@ -11,5 +11,10 @@
   "peerDependencies": {
     "typescript": "^5"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@clack/prompts": "^1.7.0",
+    "yaml": "^2.9.0",
+    "zod": "^4.4.3"
+  }
 }

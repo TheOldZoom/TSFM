@@ -3,7 +3,7 @@ import { request } from "../request";
 
 import type { LastFMUser } from "../types/user";
 
-import type { LastFMRecentTracks } from "../types/tracks";
+import type { LastFMRecentTracks } from "../types/track";
 
 export class UserMethods {
   constructor(private readonly client: LastFM) {}

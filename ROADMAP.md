@@ -37,16 +37,16 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 
 ## Phase 3 — Configuration
 
-- [ ] Add XDG configuration support
-- [ ] Add YAML configuration
-- [ ] Add configuration schema
-- [ ] Add configuration validation
-- [ ] Add Last.fm username configuration
-- [ ] Add Last.fm API key configuration
-- [ ] Add `tsfm setup`
-- [ ] Add `tsfm config`
-- [ ] Add `tsfm config path`
-- [ ] Add environment variable overrides
+- [x] Add XDG configuration support
+- [x] Add YAML configuration
+- [x] Add configuration schema
+- [x] Add configuration validation
+- [x] Add Last.fm username configuration
+- [x] Add Last.fm API key configuration
+- [x] Add `tsfm setup`
+- [x] Add `tsfm config`
+- [x] Add `tsfm config path`
+- [x] Add environment variable overrides
 
 **Goal:** TSFM can be configured and connected to a Last.fm account.
 

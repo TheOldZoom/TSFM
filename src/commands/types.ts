@@ -1,4 +1,4 @@
-import type { Config } from "../config/types";
+import type { Config } from "@/config/schema";
 
 export interface CommandContext {
   args: string[];
