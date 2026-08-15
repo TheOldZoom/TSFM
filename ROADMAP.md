@@ -54,18 +54,18 @@ TSFM is built incrementally. Each phase should leave the project in a usable sta
 
 ## Phase 4 — Core Commands
 
-- [ ] Add `tsfm recent`
-- [ ] Add currently playing detection
-- [ ] Add recent track information
-- [ ] Add `--user`
-- [ ] Add `--limit`
-- [ ] Add `tsfm user`
-- [ ] Add user information
-- [ ] Add `tsfm top`
-- [ ] Add top artists
-- [ ] Add top tracks
-- [ ] Add top albums
-- [ ] Add time period selection
+- [x] Add `tsfm recent`
+- [x] Add currently playing detection
+- [x] Add recent track information
+- [x] Add `--user`
+- [x] Add `--limit`
+- [x] Add `tsfm user`
+- [x] Add user information
+- [x] Add `tsfm top`
+- [x] Add top artists
+- [x] Add top tracks
+- [x] Add top albums
+- [x] Add time period selection
 
 **Goal:** TSFM can provide the core Last.fm information.
 
