@@ -1,6 +1,6 @@
 {
   "name": "@theoldzoom/tsfm",
-  "version": "0.1.4",
+  "version": "1.0.1",
   "description": "A Last.fm CLI built with TypeScript and Bun",
   "keywords": [
     "lastfm",
