@@ -1,6 +1,6 @@
 {
   "name": "@theoldzoom/tsfm",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A Last.fm CLI built with TypeScript",
   "type": "module",
   "module": "src/index.ts",
